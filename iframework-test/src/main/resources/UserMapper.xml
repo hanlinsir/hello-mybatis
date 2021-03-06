@@ -1,0 +1,13 @@
+<mapper namespace="com.hanlinsir.dao.IUserDao">
+
+    <!--sql的唯一标识：namespace.id来组成 ： statementId-->
+    <select id="findAll" resultType="com.hanlinsir.entity.User" >
+        select * from user
+    </select>
+
+    <select id="findByCondition" resultType="com.hanlinsir.entity.User" paramterType="com.hanlinsir.entity.User">
+        select * from user where id = #{id} and username = #{username}
+    </select>
+
+
+</mapper>
