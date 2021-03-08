@@ -6,7 +6,7 @@ import org.mybatis.caches.redis.RedisCache;
 
 import java.util.List;
 
-@CacheNamespace(implementation = RedisCache.class) //开启二级缓存，使用redis可以作为分布式二级缓存
+//@CacheNamespace(implementation = RedisCache.class) //开启二级缓存，使用redis可以作为分布式二级缓存
 public interface IUserMapper {
 
     //查询所有用户、同时查询每个用户关联的订单信息
