@@ -7,8 +7,8 @@
 ### 1. 模块说明：
 
 - persistence-framework    自定义持久化框架
-- iframework-test  框架的测试学习
-
+- iframework-test  自定义框架的使用端测试
+- mybatis-multitable mybatis 框架使用，包含 CRUD/缓存/分页等
 
 
 ### 2. 功能迭代说明
