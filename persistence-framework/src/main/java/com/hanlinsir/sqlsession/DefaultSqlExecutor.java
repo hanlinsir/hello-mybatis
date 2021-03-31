@@ -30,26 +30,7 @@ public class DefaultSqlExecutor implements SqlExecutor {
     public <E> List<E> query(MyConfiguration configuration, MappedStatement statement, Object... params) throws Exception {
         ArrayList<Object> results = new ArrayList<>();
 
-        // 处理 sql
-        BoundSql boundSql = getBoundSql(statement.getSql());
-        DataSource dataSource = configuration.getDataSource();
-
-        Connection connection = dataSource.getConnection();
-
-        // 预处理
-        PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getSql());
-        List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-        String paramType = statement.getParamType();
-        for (int i = 0; i < parameterMappings.size(); i++) {
-            String content = parameterMappings.get(i).getContent();
-            Class<?> clz = getTypeClass(paramType);
-            Field paramTypeField = clz.getDeclaredField(content);
-            paramTypeField.setAccessible(true);
-            Object value = paramTypeField.get(params[0]);
-
-            preparedStatement.setObject(i+1, value);
-        }
-
+        PreparedStatement preparedStatement = initPreparedStatement(configuration, statement, params);
         ResultSet resultSet = preparedStatement.executeQuery();
 
         // 处理结果集
@@ -74,6 +55,38 @@ public class DefaultSqlExecutor implements SqlExecutor {
         }
 
         return (List<E>) results;
+    }
+
+    @Override
+    public int update(MyConfiguration configuration, MappedStatement statement, Object... params) throws Exception {
+        PreparedStatement preparedStatement = initPreparedStatement(configuration, statement, params);
+        return preparedStatement.executeUpdate();
+    }
+
+    private PreparedStatement initPreparedStatement(MyConfiguration configuration, MappedStatement statement, Object... params) throws Exception{
+        /**
+         * 暂时不做关闭处理
+         */
+        // 处理 sql
+        BoundSql boundSql = getBoundSql(statement.getSql());
+        DataSource dataSource = configuration.getDataSource();
+
+        Connection connection = dataSource.getConnection();
+
+        // 预处理
+        PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getSql());
+        List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+        String paramType = statement.getParamType();
+        for (int i = 0; i < parameterMappings.size(); i++) {
+            String content = parameterMappings.get(i).getContent();
+            Class<?> clz = getTypeClass(paramType);
+            Field paramTypeField = clz.getDeclaredField(content);
+            paramTypeField.setAccessible(true);
+            Object value = paramTypeField.get(params[0]);
+
+            preparedStatement.setObject(i+1, value);
+        }
+        return preparedStatement;
     }
 
     private Class<?> getTypeClass(String clzType) throws ClassNotFoundException {

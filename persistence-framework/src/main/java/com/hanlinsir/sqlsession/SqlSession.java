@@ -14,5 +14,11 @@ public interface SqlSession {
 
     <E> E findOne(String statementId, Object... params) throws Exception;
 
+    int insert(String statementId, Object... params) throws Exception;
+
+    int update(String statementId, Object... params) throws Exception;
+
+    int delete(String statementId, Object... params) throws Exception;
+
     <T> T getMapper(Class<T> mapperClass);
 }

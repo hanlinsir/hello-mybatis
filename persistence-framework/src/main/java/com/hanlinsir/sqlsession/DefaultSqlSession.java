@@ -1,5 +1,6 @@
 package com.hanlinsir.sqlsession;
 
+import com.hanlinsir.pojo.MappedStatement;
 import com.hanlinsir.pojo.MyConfiguration;
 
 import java.lang.reflect.*;
@@ -36,6 +37,22 @@ public class DefaultSqlSession implements SqlSession {
         return null;
     }
 
+    @Override
+    public int insert(String statementId, Object... params) throws Exception {
+        return executor.update(configuration, configuration.getStatementMap().get(statementId), params);
+    }
+
+    @Override
+    public int update(String statementId, Object... params) throws Exception {
+        return executor.update(configuration, configuration.getStatementMap().get(statementId), params);
+    }
+
+    @Override
+    public int delete(String statementId, Object... params) throws Exception {
+        return executor.update(configuration, configuration.getStatementMap().get(statementId), params);
+    }
+
+
     public <T> T getMapper(Class<T> mapperClass) {
         Object mapper = Proxy.newProxyInstance(DefaultSqlSession.class.getClassLoader(), new Class[]{mapperClass}, (proxy, method, args) -> {
             // 底层都还是去执行JDBC代码
@@ -50,7 +67,19 @@ public class DefaultSqlSession implements SqlSession {
             // 获取被调用方法的返回值类型
             Type genericReturnType = method.getGenericReturnType();
 
-            // TODO 需要优化
+            MappedStatement ms = configuration.getStatementMap().get(statementId);
+            String sql = ms.getSql();
+            if (sql != null ) {
+                if (sql.toLowerCase().startsWith("insert")) {
+                    return insert(statementId, args);
+                }
+                if (sql.toLowerCase().startsWith("update")) {
+                    return update(statementId, args);
+                }
+                if (sql.toLowerCase().startsWith("delete")) {
+                    return delete(statementId, args);
+                }
+            }
             // 判断是否进行了 泛型类型参数化
             if (genericReturnType instanceof ParameterizedType) {
                 return findAll(statementId, args);

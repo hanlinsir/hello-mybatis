@@ -25,9 +25,9 @@ public class User implements Serializable { // 开启 Mybatis 二级缓存需要
     private String birthday;
 
     // 由于 tk.mybatis 中没有过滤实体属性的功能，因此直接注释
-//    //表示用户关联的订单
-//    private List<Order> orderList = new ArrayList<>();
-//
-//    //表示用户关联的角色
-//    private List<Role> roleList = new ArrayList<>();
+    //表示用户关联的订单
+    private List<Order> orderList = new ArrayList<>();
+
+    //表示用户关联的角色
+    private List<Role> roleList = new ArrayList<>();
 }

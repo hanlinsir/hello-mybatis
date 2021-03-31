@@ -14,4 +14,6 @@ import java.util.List;
 public interface SqlExecutor {
 
     <E> List<E> query(MyConfiguration configuration, MappedStatement statement, Object... params) throws Exception;
+
+    int update(MyConfiguration configuration, MappedStatement statement, Object... params) throws Exception;
 }

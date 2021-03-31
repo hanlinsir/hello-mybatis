@@ -26,17 +26,33 @@ public class IPersistenceTest {
 
         SqlSessionFactory builder = SqlSessionFactoryBuilder.builder(in);
         SqlSession sqlSession = builder.create();
-
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
 
-        List<User> users = userDao.findAll();
-        users.forEach(System.out::println);
+        System.out.println("----------------新增测试---------------------");
+//        User user = new User();
+//        user.setUsername("test insert");
+//        user.setPassword("1211111");
+//        user.setBirthday("2019-12-12");
+//        userDao.insertUser(user);
 
-        User user = new User();
-        user.setId(1);
-        user.setUsername("lucy");
-        User user2 = userDao.findByCondition(user);
+        System.out.println("----------------修改测试---------------------");
+//        User updateUser = userDao.findByCondition(user);
+//        if (updateUser != null) {
+//            System.out.println("单挑查询数据： " + updateUser);
+//            updateUser.setUsername("test update");
+//        }
+//        System.out.println(userDao.updateUser(updateUser));
 
-        System.out.println(user2);
+        System.out.println("----------------删除测试---------------------");
+        User user2 = new User();
+        user2.setUsername("test update");
+        user2 = userDao.findByCondition(user2);
+        if (user2 != null) {
+            userDao.deleteUser(user2);
+        }
+
+        System.out.println("----------------查询列表测试---------------------");
+//        List<User> users = userDao.findAll();
+//        users.forEach(System.out::println);
     }
 }
